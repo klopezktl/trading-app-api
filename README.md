@@ -20,3 +20,5 @@ docker volume ls
 docker volume rm trading-app-api_dev-db-data
 
 SUPERADMIN: superadmin@mail.com/superadmin
+
+http://127.0.0.1:8000/api/docs/

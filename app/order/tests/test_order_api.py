@@ -16,6 +16,7 @@ from core.models import Order
 from order.serializers import (
     OrderSerializer,
     OrderDetailSerializer,
+    OrderTotalInvestmentSerializer
 )
 
 ORDERS_URL = reverse('order:order-list')
@@ -82,7 +83,6 @@ class PrivateOrderAPITests(TestCase):
 
         res = self.client.get(ORDERS_URL)
 
-        # orders = Order.objects.all().order_by('-id')
         orders = Order.objects.filter(user=self.user)
         serializer = OrderSerializer(orders, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -112,3 +112,13 @@ class PrivateOrderAPITests(TestCase):
         for k, v in payload.items():
             self.assertEqual(getattr(order, k), v)
         self.assertEqual(order.user, self.user)
+
+    def test_get_user_total_investment_value(self):
+        """Test get total investment value of user"""
+        create_order(user=self.user)
+        create_order(user=self.user)
+
+        res = self.client.get(ORDERS_URL, {'get_total': True})
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
